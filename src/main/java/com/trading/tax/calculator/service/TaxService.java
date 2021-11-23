@@ -22,10 +22,14 @@ public class TaxService {
     @Value("${cc.usd}")
     private String usdCc;
 
-    public double getUsdCurrencyExchangeRate() throws ParseException, JsonProcessingException {
+    public double getUsdCurrencyExchangeRate(String exchangeRateDate) throws ParseException, JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         JSONParser parser = new JSONParser();
-        JSONArray jsonArray = (JSONArray) parser.parse(restTemplate.getForObject(endpointUri, String.class));
+        String uri = endpointUri + exchangeRateDate + "&json";
+        System.out.println("==========================");
+        System.out.println(uri);
+        System.out.println("==========================");
+        JSONArray jsonArray = (JSONArray) parser.parse(restTemplate.getForObject(uri, String.class));
         Object[] currencyRatesArray = jsonArray.toArray();
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -33,7 +37,7 @@ public class TaxService {
         for (Object currencyRateObject : currencyRatesArray) {
             // converting json string to object
             CurrencyRate currencyRate = objectMapper.readValue(currencyRateObject.toString(), CurrencyRate.class);
-            if (currencyRate.getCc().equals(usdCc)){
+            if (currencyRate.getCc().equals(usdCc)) {
                 System.out.println(currencyRate.getCc());
                 System.out.println(currencyRate.getRate());
                 usCurrencyRate = currencyRate.getRate();
