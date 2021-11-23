@@ -1,6 +1,7 @@
 package com.trading.tax.calculator.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.trading.tax.calculator.model.CurrencyRate;
 import com.trading.tax.calculator.service.TaxService;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,12 @@ public class TaxController {
     }
 
     @GetMapping(path = "{exchangeRateDate}")
-    public String getUsdCurrencyExchangeRate(@PathVariable String exchangeRateDate) throws ParseException, JsonProcessingException {
+    public CurrencyRate getUsdCurrencyExchangeRate(@PathVariable String exchangeRateDate) throws ParseException, JsonProcessingException {
         return taxService.getUsdCurrencyExchangeRate(exchangeRateDate);
+    }
+
+    @GetMapping(path = "{exchangeRateDate}/{usdPrice}")
+    public double getUahValueForUsdPrice(@PathVariable String exchangeRateDate, @PathVariable double usdPrice) throws ParseException, JsonProcessingException {
+        return taxService.calculateCurrencyRate(exchangeRateDate, usdPrice);
     }
 }

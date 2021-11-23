@@ -32,23 +32,27 @@ public class TaxService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String getUsdCurrencyExchangeRate(String exchangeRateDate) throws ParseException, JsonProcessingException {
+    public CurrencyRate getUsdCurrencyExchangeRate(String exchangeRateDate) throws ParseException, JsonProcessingException {
         String uri = endpointUri + exchangeRateDate + "&json";
-        JSONArray jsonArray = (JSONArray) parser.parse(restTemplate.getForObject(uri, String.class));
-        Object[] currencyRatesArray = jsonArray.toArray();
 
-        double usCurrencyRate = 0;
-        String usCc = "";
-        String usCurrencyExchangedate = "";
-        for (Object currencyRateObject : currencyRatesArray) {
+        JSONArray currencyRateJsonArray = (JSONArray) parser.parse(restTemplate.getForObject(uri, String.class));
+        return findUsCurrencyRate(currencyRateJsonArray);
+    }
+
+    public double calculateCurrencyRate(String exchangeRateDate, double usdPrice) throws ParseException, JsonProcessingException {
+        double rate = getUsdCurrencyExchangeRate(exchangeRateDate).getRate();
+        return rate * usdPrice;
+    }
+
+    private CurrencyRate findUsCurrencyRate(JSONArray currencyRateJsonArray) throws JsonProcessingException {
+        CurrencyRate currencyRate = new CurrencyRate();
+        for (Object currencyRateObject : currencyRateJsonArray) {
             // converting json string to object
-            CurrencyRate currencyRate = objectMapper.readValue(currencyRateObject.toString(), CurrencyRate.class);
+            currencyRate = objectMapper.readValue(currencyRateObject.toString(), CurrencyRate.class);
             if (currencyRate.getCc().equals(usdCc)) {
-                usCurrencyRate = currencyRate.getRate();
-                usCc = currencyRate.getCc();
-                usCurrencyExchangedate = currencyRate.getExchangedate();
+                return currencyRate;
             }
         }
-        return "{rate: " + usCurrencyRate + ", cc: " + usCc + ", currencyExchangedate: " + usCurrencyExchangedate + "}";
+        return currencyRate;
     }
 }
