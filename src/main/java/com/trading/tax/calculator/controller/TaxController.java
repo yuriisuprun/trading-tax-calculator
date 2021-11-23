@@ -22,7 +22,7 @@ public class TaxController {
     }
 
     @GetMapping(path = "{exchangeRateDate}")
-    public double getUsdCurrencyExchangeRate(@PathVariable String exchangeRateDate) throws ParseException, JsonProcessingException {
+    public String getUsdCurrencyExchangeRate(@PathVariable String exchangeRateDate) throws ParseException, JsonProcessingException {
         return taxService.getUsdCurrencyExchangeRate(exchangeRateDate);
     }
 }
