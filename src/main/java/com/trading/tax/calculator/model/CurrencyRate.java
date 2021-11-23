@@ -11,17 +11,17 @@ public class CurrencyRate implements Serializable {
     String txt;
     double rate;
     int r030;
-    String exchangeDate;
+    String exchangedate;
 
     public CurrencyRate() {
     }
 
-    public CurrencyRate(String cc, String txt, double rate, int r030, String exchangeDate) {
+    public CurrencyRate(String cc, String txt, double rate, int r030, String exchangedate) {
         this.cc = cc;
         this.txt = txt;
         this.rate = rate;
         this.r030 = r030;
-        this.exchangeDate = exchangeDate;
+        this.exchangedate = exchangedate;
     }
 
     public String getCc() {
@@ -56,12 +56,12 @@ public class CurrencyRate implements Serializable {
         this.r030 = r030;
     }
 
-    public String getExchangeDate() {
-        return exchangeDate;
+    public String getExchangedate() {
+        return exchangedate;
     }
 
-    public void setExchangeDate(String exchangeDate) {
-        this.exchangeDate = exchangeDate;
+    public void setExchangedate(String exchangedate) {
+        this.exchangedate = exchangedate;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class CurrencyRate implements Serializable {
                 ", txt='" + txt + '\'' +
                 ", rate=" + rate +
                 ", r030=" + r030 +
-                ", exchangedate=" + exchangeDate +
+                ", exchangedDate=" + exchangedate +
                 '}';
     }
 }
