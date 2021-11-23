@@ -6,6 +6,7 @@ import com.trading.tax.calculator.model.CurrencyRate;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,23 +23,36 @@ public class TaxService {
     @Value("${cc.usd}")
     private String usdCc;
 
-    public double getUsdCurrencyExchangeRate() throws ParseException, JsonProcessingException {
-        RestTemplate restTemplate = new RestTemplate();
-        JSONParser parser = new JSONParser();
-        JSONArray jsonArray = (JSONArray) parser.parse(restTemplate.getForObject(endpointUri, String.class));
-        Object[] currencyRatesArray = jsonArray.toArray();
-        ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private RestTemplate restTemplate;
 
-        double usCurrencyRate = 0;
-        for (Object currencyRateObject : currencyRatesArray) {
+    @Autowired
+    private JSONParser parser;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    public CurrencyRate getUsdCurrencyExchangeRate(String exchangeRateDate) throws ParseException, JsonProcessingException {
+        String uri = endpointUri + exchangeRateDate + "&json";
+
+        JSONArray currencyRateJsonArray = (JSONArray) parser.parse(restTemplate.getForObject(uri, String.class));
+        return findUsCurrencyRate(currencyRateJsonArray);
+    }
+
+    public double calculateCurrencyRate(String exchangeRateDate, double usdPrice) throws ParseException, JsonProcessingException {
+        double rate = getUsdCurrencyExchangeRate(exchangeRateDate).getRate();
+        return rate * usdPrice;
+    }
+
+    private CurrencyRate findUsCurrencyRate(JSONArray currencyRateJsonArray) throws JsonProcessingException {
+        CurrencyRate currencyRate = new CurrencyRate();
+        for (Object currencyRateObject : currencyRateJsonArray) {
             // converting json string to object
-            CurrencyRate currencyRate = objectMapper.readValue(currencyRateObject.toString(), CurrencyRate.class);
-            if (currencyRate.getCc().equals(usdCc)){
-                System.out.println(currencyRate.getCc());
-                System.out.println(currencyRate.getRate());
-                usCurrencyRate = currencyRate.getRate();
+            currencyRate = objectMapper.readValue(currencyRateObject.toString(), CurrencyRate.class);
+            if (currencyRate.getCc().equals(usdCc)) {
+                return currencyRate;
             }
         }
-        return usCurrencyRate;
+        return currencyRate;
     }
 }
