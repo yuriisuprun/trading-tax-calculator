@@ -1,27 +1,27 @@
 package com.trading.tax.calculator.model;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Created by Yurii_Suprun
  */
-public class CurrencyRate {
+public class CurrencyRate implements Serializable {
 
     String cc;
     String txt;
     double rate;
     int r030;
-    Date exchangedate;
+    String exchangeDate;
 
     public CurrencyRate() {
     }
 
-    public CurrencyRate(String cc, String txt, double rate, int r030, Date exchangedate) {
+    public CurrencyRate(String cc, String txt, double rate, int r030, String exchangeDate) {
         this.cc = cc;
         this.txt = txt;
         this.rate = rate;
         this.r030 = r030;
-        this.exchangedate = exchangedate;
+        this.exchangeDate = exchangeDate;
     }
 
     public String getCc() {
@@ -56,12 +56,12 @@ public class CurrencyRate {
         this.r030 = r030;
     }
 
-    public Date getExchangedate() {
-        return exchangedate;
+    public String getExchangeDate() {
+        return exchangeDate;
     }
 
-    public void setExchangedate(Date exchangedate) {
-        this.exchangedate = exchangedate;
+    public void setExchangeDate(String exchangeDate) {
+        this.exchangeDate = exchangeDate;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class CurrencyRate {
                 ", txt='" + txt + '\'' +
                 ", rate=" + rate +
                 ", r030=" + r030 +
-                ", exchangedate=" + exchangedate +
+                ", exchangedate=" + exchangeDate +
                 '}';
     }
 }
