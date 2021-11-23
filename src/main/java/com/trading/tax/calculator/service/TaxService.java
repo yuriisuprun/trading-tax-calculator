@@ -40,6 +40,7 @@ public class TaxService {
             if (currencyRate.getCc().equals(usdCc)) {
                 System.out.println(currencyRate.getCc());
                 System.out.println(currencyRate.getRate());
+                System.out.println(currencyRate.getExchangedate());
                 usCurrencyRate = currencyRate.getRate();
             }
         }
