@@ -1,11 +1,9 @@
 package com.trading.tax.calculator.model;
 
-import java.io.Serializable;
-
 /**
  * Created by Yurii_Suprun
  */
-public class CurrencyRate implements Serializable {
+public class CurrencyRate {
 
     String cc;
     String txt;
